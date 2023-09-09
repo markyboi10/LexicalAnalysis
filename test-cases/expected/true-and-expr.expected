@@ -1,0 +1,7 @@
+INT(2)
+LT
+INT(3)
+AND
+INT(2)
+EQ
+INT(2)
