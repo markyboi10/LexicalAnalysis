@@ -127,6 +127,40 @@ public class Token
                 return "ADD";
             case SUB:
                 return "SUB";
+            case MULT:
+                return "MULT";
+            case DIV:
+                return "DIV";
+            case MOD:
+                return "MOD";
+            case NOT:
+                return "NOT";
+            case AND:
+                return "AND";
+            case OR:
+                return "OR";
+            case GT:
+                return "GT";
+            case GTE:
+                return "GTE";
+            case LT:
+                return "LT";
+            case LTE:
+                return "LTE";
+            case EQ:
+                return "EQ";
+            case NEQ:
+                return "NEQ";
+            case LPAREN:
+                return "LPAREN";
+            case RPAREN:
+                return "RPAREN";
+            case ASSIGN:
+                return "ASSIGN";
+            case VAL:
+                return "VAL";
+            case COMMENT:
+                return "COMMENT";
             case ID:
                 return "ID(" + val + ")";
             case EOF:

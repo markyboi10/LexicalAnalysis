@@ -56,6 +56,38 @@ public enum TokenType
      */
     SUB,
     
+    MULT,
+    
+    DIV,
+    
+    MOD,
+    
+    NOT,
+    
+    AND,
+    
+    OR,
+    
+    GT,
+    
+    GTE,
+    
+    LT,
+    
+    LTE,
+    
+    EQ,
+    
+    NEQ,
+    
+    LPAREN,
+    
+    RPAREN,
+    
+    ASSIGN,
+    VAL,
+    COMMENT,
+    
     /**
      * An unknown token.
      */

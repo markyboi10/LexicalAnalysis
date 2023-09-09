@@ -25,20 +25,18 @@ import java.io.StringReader;
 
 /**
  * This file implements a basic lexical analyzer.
- * 
+ *
  * @author Zach Kissel
  */
-public class Lexer
-{
+public class Lexer {
+
     private BufferedReader input; // The input to the lexer.
     private char nextChar; // The next character read.
     private boolean skipRead; // Whether or not to skip the next char
-                              // read.
+    // read.
     private long currentLineNumber; // The current line number being processed.
 
-
-    private enum CharacterClass
-    {
+    private enum CharacterClass {
         LETTER, DIGIT, WHITE_SPACE, OTHER, END
     };
 
@@ -46,133 +44,190 @@ public class Lexer
 
     /**
      * Constructs a new lexical analyzer whose source input is a file.
-     * 
+     *
      * @param file the file to open for lexical analysis.
      * @throws FileNotFoundException if the file can not be opened.
      */
-    public Lexer(File file) throws FileNotFoundException
-    {
+    public Lexer(File file) throws FileNotFoundException {
         input = new BufferedReader(new FileReader(file));
         currentLineNumber = 1;
     }
 
     /**
      * Constructs a new lexical analyzer whose source is a string.
-     * 
+     *
      * @param input the input to lexically analyze.
      */
-    public Lexer(String input)
-    {
+    public Lexer(String input) {
         this.input = new BufferedReader(new StringReader(input));
         currentLineNumber = 1;
     }
 
     /**
      * Gets the next token from the stream.
-     * 
+     *
      * @return the next token.
      */
-    public Token nextToken()
-    {
+    public Token nextToken() {
         String value = ""; // The value to be associated with the token.
 
         getNonBlank();
-        switch (nextClass)
-        {
-        // The state where we are recognizing identifiers.
-        // Regex: [A-Za-Z][0-9a-zA-z]*
-        case LETTER:
-            value += nextChar;
-            getChar();
-
-            // Read the rest of the identifier.
-            while (nextClass == CharacterClass.DIGIT
-                    || nextClass == CharacterClass.LETTER)
-            {
+        switch (nextClass) {
+            // The state where we are recognizing identifiers.
+            // Regex: [A-Za-Z][0-9a-zA-z]*
+            case LETTER:
                 value += nextChar;
                 getChar();
-            }
-            unread(); // The symbol just read is part of the next token.
-            
-            if (value.equalsIgnoreCase("TRUE")) {
-                return new Token(TokenType.TRUE, value);
-            } else if (value.equalsIgnoreCase("FALSE")) {
-                return new Token(TokenType.FALSE, value);
-            }
-            return new Token(TokenType.ID, value);
 
-        // The state where we are recognizing digits.
-        // Regex: [0-9]+
-        case DIGIT:
-            value += nextChar;
-            getChar();
-
-            while (nextClass == CharacterClass.DIGIT)
-            {
-                value += nextChar;
-                getChar();
-            }
-
-            if (nextChar == '.') // Decimal point.
-            {
-                value += nextChar;
-                getChar();
-                while (nextClass == CharacterClass.DIGIT)
-                {
+                // Read the rest of the identifier.
+                while (nextClass == CharacterClass.DIGIT
+                        || nextClass == CharacterClass.LETTER) {
                     value += nextChar;
                     getChar();
                 }
-                unread();
-                return new Token(TokenType.REAL, value);
-            }
-            unread(); // The symbol just read is part of the next token.
+                unread(); // The symbol just read is part of the next token.
 
-            return new Token(TokenType.INT, value);
+                if (value.equalsIgnoreCase("TRUE")) {
+                    return new Token(TokenType.TRUE, value);
+                } else if (value.equalsIgnoreCase("FALSE")) {
+                    return new Token(TokenType.FALSE, value);
+                } else if (value.equalsIgnoreCase("MOD")) {
+                    return new Token(TokenType.MOD, value);
+                } else if (value.equalsIgnoreCase("NOT")) {
+                    return new Token(TokenType.NOT, value);
+                } else if (value.equalsIgnoreCase("AND")) {
+                    return new Token(TokenType.AND, value);
+                } else if (value.equalsIgnoreCase("OR")) {
+                    return new Token(TokenType.OR, value);
+                } else if (value.equalsIgnoreCase("VAL")) {
+                    return new Token(TokenType.VAL, value);
+                }
+                return new Token(TokenType.ID, value);
 
-        // Handles all special character symbols.
-        case OTHER:
-            return lookup();
+            // The state where we are recognizing digits.
+            // Regex: [0-9]+
+            case DIGIT:
+                value += nextChar;
+                getChar();
 
-        // We reached the end of our input.
-        case END:
-            return new Token(TokenType.EOF, "");
+                while (nextClass == CharacterClass.DIGIT) {
+                    value += nextChar;
+                    getChar();
+                }
 
-        // This should never be reached.
-        default:
-            return new Token(TokenType.UNKNOWN, "");
+                if (nextChar == '.') // Decimal point.
+                {
+                    value += nextChar;
+                    getChar();
+                    while (nextClass == CharacterClass.DIGIT) {
+                        value += nextChar;
+                        getChar();
+                    }
+                    unread();
+                    return new Token(TokenType.REAL, value);
+                }
+                unread(); // The symbol just read is part of the next token.
+
+                return new Token(TokenType.INT, value);
+
+            // Handles all special character symbols.
+            case OTHER:
+                return lookup();
+
+            // We reached the end of our input.
+            case END:
+                return new Token(TokenType.EOF, "");
+
+            // This should never be reached.
+            default:
+                return new Token(TokenType.UNKNOWN, "");
         }
     }
 
     /**
      * Get the current line number being processed.
-     * 
+     *
      * @return the current line number being processed.
      */
-    public long getLineNumber()
-    {
+    public long getLineNumber() {
         return currentLineNumber;
     }
 
-    /************
+    /**
+     * **********
      * Private Methods
-     ************/
-
+     ***********
+     */
     /**
      * Processes the {@code nextChar} and returns the resulting token.
-     * 
+     *
      * @return the new token.
      */
-    private Token lookup()
-    {
+    private Token lookup() {
 
-        switch (nextChar)
-        {
-        case '+':
-            return new Token(TokenType.ADD, "+");
-        case '-':
-            return new Token(TokenType.SUB, "-");
-        default:
-            return new Token(TokenType.UNKNOWN, String.valueOf(nextChar));
+        switch (nextChar) {
+            case '+':
+                return new Token(TokenType.ADD, "+");
+            case '-':
+                return new Token(TokenType.SUB, "-");
+            case '*':
+                return new Token(TokenType.MULT, "*");
+            case '/':
+                return new Token(TokenType.DIV, "/");
+            case '>':
+                getChar();
+                if (nextChar == '=') {
+                    getChar();
+                    return new Token(TokenType.GTE, ">=");
+                } else {
+                    unread();
+                    return new Token(TokenType.GT, ">");
+                }
+            case '<':
+                getChar();
+                if (nextChar == '=') {
+                    getChar();
+                    return new Token(TokenType.LTE, "<=");
+                } else {
+                    unread();
+                    return new Token(TokenType.LT, "<");
+                }
+            case '=':
+                return new Token(TokenType.EQ, "=");
+            case '!':
+                getChar();
+                if (nextChar == '=') {
+                    getChar();
+                    return new Token(TokenType.NEQ, "!=");
+                }
+            case '\\':
+                getChar();
+                switch (nextChar) {
+                    case '(' -> {
+                        getChar();
+                        if (nextChar != '\\') {
+                            return new Token(TokenType.LPAREN, "\\(");
+                        } else {
+                            System.out.println("Start of comment");
+                        }
+                    }
+                    case ')' -> {
+                        getChar();
+                        return new Token(TokenType.RPAREN, "\\)");
+                    }
+                    default -> {
+                        unread(); // Push back the character following '\'.
+                        return new Token(TokenType.UNKNOWN, "\\" + nextChar);
+                    }
+                }
+            case ':':
+                getChar();
+                if (nextChar == '=') {
+                    getChar();
+                    return new Token(TokenType.ASSIGN, ":=");
+                }
+            default:
+                return new Token(TokenType.UNKNOWN, String.valueOf(nextChar));
         }
     }
 
@@ -180,23 +235,18 @@ public class Lexer
      * Gets the next character from the buffered reader. This updates
      * potentially both {@code nextChar} and {@code nextClass}.
      */
-    private void getChar()
-    {
+    private void getChar() {
         int c = -1;
 
         // Handle the unread operation.
-        if (skipRead)
-        {
+        if (skipRead) {
             skipRead = false;
             return;
         }
 
-        try
-        {
+        try {
             c = input.read();
-        }
-        catch (IOException ioe)
-        {
+        } catch (IOException ioe) {
             System.err.println("Internal error (getChar()): " + ioe);
             nextChar = '\0';
             nextClass = CharacterClass.END;
@@ -211,38 +261,39 @@ public class Lexer
 
         // Set the character and determine it's class.
         nextChar = (char) c;
-        if (Character.isLetter(nextChar))
+        if (Character.isLetter(nextChar)) {
             nextClass = CharacterClass.LETTER;
-        else if (Character.isDigit(nextChar))
+        } else if (Character.isDigit(nextChar)) {
             nextClass = CharacterClass.DIGIT;
-        else if (Character.isWhitespace(nextChar))
+        } else if (Character.isWhitespace(nextChar)) {
             nextClass = CharacterClass.WHITE_SPACE;
-        else
+        } else {
             nextClass = CharacterClass.OTHER;
+        }
 
         // Update the line counter for error checking.
-        if (nextChar == '\n')
+        if (nextChar == '\n') {
             currentLineNumber++;
+        }
     }
 
     /**
      * Gets the next non-blank character. This updates potentially both
      * {@code nextChar} and {@code nextClass}.
      */
-    private void getNonBlank()
-    {
+    private void getNonBlank() {
         getChar();
 
         while (nextClass != CharacterClass.END
-                && Character.isWhitespace(nextChar))
+                && Character.isWhitespace(nextChar)) {
             getChar();
+        }
     }
 
     /**
      * Save the previous character for a future read operation.
      */
-    private void unread()
-    {
+    private void unread() {
         skipRead = true;
     }
 
