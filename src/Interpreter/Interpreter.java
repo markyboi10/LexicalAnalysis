@@ -173,7 +173,7 @@ public class Interpreter
     /**
      * The entry point.
      * 
-     * @param args the array of strings that represnt the command line
+     * @param args the array of strings that represent the command line
      *             arguments.
      */
     public static void main(String[] args)

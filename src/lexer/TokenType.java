@@ -37,12 +37,12 @@ public enum TokenType
     ID,
     
     /**
-     * A true boolean token
+     * A true boolean token, reserved word
      */
     TRUE,
     
     /**
-     * A false boolean token
+     * A false boolean token, reserved word
      */
     FALSE,
 
@@ -56,36 +56,89 @@ public enum TokenType
      */
     SUB,
     
+    /**
+     * Multiplication operation token
+     */
     MULT,
     
+    /**
+     * Division operation token
+     */
     DIV,
     
+    /**
+     * Mod operation token, reserved word
+     */
     MOD,
     
+    /**
+     * Not operation token, reserved word
+     */
     NOT,
     
+    /**
+     * Add operation token, reserved word
+     */
     AND,
     
+    /**
+     * Or operarion token, reserved word
+     */
     OR,
     
+    /**
+     * < operation token
+     */
     GT,
     
+    /**
+     * <= operation token
+     */
     GTE,
     
+    /**
+     * > operation token
+     */
     LT,
     
+    /**
+     * >= operation token
+     */
     LTE,
     
+    /**
+     * Equals operation token
+     */
     EQ,
     
+    /**
+     * != not equal operation token
+     */
     NEQ,
     
+    /**
+     * Left parentheses operation token
+     */
     LPAREN,
     
+    /**
+     * Right parentheses operation token
+     */
     RPAREN,
     
+    /**
+     * Assignment operation token, :=
+     */
     ASSIGN,
+    
+    /**
+     * Value operation token, reserved word
+     */
     VAL,
+    
+    /**
+     * Comment block operation token
+     */
     COMMENT,
     
     /**
