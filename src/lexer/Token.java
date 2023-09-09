@@ -166,9 +166,9 @@ public class Token
             case EOF:
                 return "EOF";
             case TRUE:
-                return "TRUE(" + val + ")";
+                return "TRUE";
             case FALSE:
-                return "FALSE(" + val + ")";
+                return "FALSE";
         }
         return "";
     }
