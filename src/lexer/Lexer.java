@@ -89,17 +89,17 @@ public class Lexer {
 
                 if (value.equalsIgnoreCase("TRUE")) {
                     return new Token(TokenType.TRUE, value);
-                } else if (value.equalsIgnoreCase("FALSE")) {
+                } else if (value.equals("false")) {
                     return new Token(TokenType.FALSE, value);
-                } else if (value.equalsIgnoreCase("MOD")) {
+                } else if (value.equals("mod")) {
                     return new Token(TokenType.MOD, value);
-                } else if (value.equalsIgnoreCase("NOT")) {
+                } else if (value.equals("not")) {
                     return new Token(TokenType.NOT, value);
-                } else if (value.equalsIgnoreCase("AND")) {
+                } else if (value.equals("and")) {
                     return new Token(TokenType.AND, value);
-                } else if (value.equalsIgnoreCase("OR")) {
+                } else if (value.equals("or")) {
                     return new Token(TokenType.OR, value);
-                } else if (value.equalsIgnoreCase("VAL")) {
+                } else if (value.equals("val")) {
                     return new Token(TokenType.VAL, value);
                 }
                 return new Token(TokenType.ID, value);
@@ -128,7 +128,7 @@ public class Lexer {
                         return new Token(TokenType.REAL, value);
                     } else {
                         unread();
-                        return new Token(TokenType.REAL, "0" + value);
+                        return new Token(TokenType.UNKNOWN, value);
                     }
                 }
 
@@ -208,7 +208,8 @@ public class Lexer {
                 if (nextChar == '=') {
                     getChar();
                     return new Token(TokenType.NEQ, "!=");
-                }                
+                } 
+            // Right paran
             case ')':
                 getChar();
                 return new Token(TokenType.RPAREN, ")");
@@ -219,7 +220,7 @@ public class Lexer {
                     getChar();
                     return new Token(TokenType.ASSIGN, ":=");
                 }
-            // Handle Right Paran and COMMENTS 
+            // Handle left paran and COMMENTS 
             case '(':
                 getChar();
                 // Start of a comment
