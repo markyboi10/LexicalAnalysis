@@ -1,1 +1,3 @@
 COMMENT
+
+java -jar LexicalAnalysis.jar --file comment.mfl

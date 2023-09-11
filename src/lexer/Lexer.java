@@ -161,8 +161,7 @@ public class Lexer {
 
     /**
      * **********
-     * Private Methods
-     ***********
+     * Private Methods **********
      */
     /**
      * Processes the {@code nextChar} and returns the resulting token.
@@ -208,7 +207,7 @@ public class Lexer {
                 if (nextChar == '=') {
                     getChar();
                     return new Token(TokenType.NEQ, "!=");
-                } 
+                }
             // Right paran
             case ')':
                 getChar();
@@ -220,41 +219,46 @@ public class Lexer {
                     getChar();
                     return new Token(TokenType.ASSIGN, ":=");
                 }
-            // Handle left paran and COMMENTS 
             case '(':
                 getChar();
                 // Start of a comment
                 if (nextChar == '*') {
+                    getChar();
                     boolean inComment = true;
                     while (inComment) {
-                        getChar();
-                        // Keep checking for end of comment otherwise continue
-                        if (nextChar == '*') {
+                        // While not any * or end detected, consume chars
+                        while (nextChar != '*' && nextClass != CharacterClass.END) {
                             getChar();
-                            // * followed by ) indicates end of comment, set boolean and exit while
+                        }
+                        // IF * detected consume and check for )
+                        if (nextChar == '*') {
+                            getChar(); 
+                            // If ) found consume and return end of comment detected
                             if (nextChar == ')') {
                                 inComment = false;
                                 getChar();
+                                return new Token(TokenType.COMMENT, "COMMENT");
                             }
+                        } else {
+                            // Handle a possible incomplete comment
+                            return new Token(TokenType.UNKNOWN, "POSSIBLE INCOMPLETE COMMENT");
                         }
                     }
-                    return new Token(TokenType.COMMENT, "COMMENT");
-                // Normal left paran
                 } else {
-                    unread(); // unread so ints or ids are not ignored after a left paran
+                    unread(); // Makes sure neigbhoring chars of a left paran aren't ignored
                     return new Token(TokenType.LPAREN, "(");
                 }
             // Handle REAL where a 0 is ommitted from the beginning
             case '.':
                 getChar();
                 if (nextClass == CharacterClass.DIGIT) {
-                    String value = ".";
+                    String value2 = ".";
                     while (nextClass == CharacterClass.DIGIT) {
-                        value += nextChar;
+                        value2 += nextChar;
                         getChar();
                     }
-                    return new Token(TokenType.REAL, value);
-                // Leave as unkknown, could be recognized as a period in the future
+                    return new Token(TokenType.REAL, value2);
+                    // Leave as unkknown, could be recognized as a period in the future
                 } else {
                     unread();
                     return new Token(TokenType.UNKNOWN, ".");
